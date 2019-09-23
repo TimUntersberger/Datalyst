@@ -1,2 +1,2 @@
-# Datalist
+# Datalyst
 cross platform dbms
