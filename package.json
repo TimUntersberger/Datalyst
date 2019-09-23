@@ -1,0 +1,44 @@
+{
+  "name": "Datalyst",
+  "version": "1.0.0",
+  "description": "cross platform dbms",
+  "main": "build/main/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "run-p main:watch renderer:watch",
+    "lib:dev": "tsc-watch src/main/lib.ts --outDir build/main --onSuccess 'node build/main/lib.js'",
+    "main:watch": "parcel --out-dir build/main src/main/index.ts --target electron",
+    "main:start": "nodemon --watch src/main/index.ts --exec 'electron .'",
+    "renderer:watch": "parcel --out-dir build/renderer src/renderer/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TimUntersberger/Datalyst.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TimUntersberger/Datalyst/issues"
+  },
+  "homepage": "https://github.com/TimUntersberger/Datalyst#readme",
+  "devDependencies": {
+    "@types/app-root-path": "^1.2.4",
+    "@types/mysql": "^2.15.7",
+    "@types/react": "^16.9.2",
+    "@types/react-dom": "^16.9.0",
+    "electron": "^6.0.10",
+    "nodemon": "^1.19.2",
+    "parcel": "^1.12.3",
+    "tsc-watch": "^4.0.0",
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {
+    "app-root-path": "^2.2.1",
+    "electron-is-dev": "^1.1.0",
+    "mysql": "^2.17.1",
+    "npm-run-all": "^4.1.5",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  }
+}
