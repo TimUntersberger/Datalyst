@@ -4,10 +4,11 @@ let sqlManager = new MySqlManager({
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "teamtengu1"
+  password: "teamtengu1",
+  database: "test"
 });
 
 sqlManager
-  .getDatabases()
+  .getMetaDataOfTable("account")
   .then(console.log)
   .catch(console.log);

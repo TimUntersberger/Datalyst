@@ -1,10 +1,15 @@
-export type Database = string;
-export type Table = string;
+import * as MySql from "mysql";
+
 export type DatabaseObject = object;
 export type TableMetaData = object;
 
+export interface ConnectionConfig extends MySql.ConnectionConfig {
+  database: string;
+}
+
 export default interface ISqlManager {
-  getDatabases(): Promise<Database[]>;
-  getDatabaseObjects(db: Database): Promise<DatabaseObject[]>;
-  getMetaDataOfTable(table: Table): Promise<TableMetaData>;
+  getDatabases(): Promise<string[]>;
+  getObjects(): Promise<DatabaseObject[]>;
+  getMetaDataOfTable(table: string): Promise<TableMetaData>;
+  getDataOfTable(table: string): Promise<any[]>;
 }
