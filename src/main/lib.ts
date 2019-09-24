@@ -1,4 +1,4 @@
-import MySqlManager from "./SqlManager/MySqlManager";
+import MySqlManager from "./SqlManager/MySqlManager"
 
 let sqlManager = new MySqlManager({
   host: "localhost",
@@ -6,9 +6,4 @@ let sqlManager = new MySqlManager({
   user: "root",
   password: "teamtengu1",
   database: "test"
-});
-
-sqlManager
-  .getMetaDataOfTable("account")
-  .then(console.log)
-  .catch(console.log);
+})
