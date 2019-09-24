@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SqlManager from "../sqlManager";
 import { useAsync } from "react-async-hook";
 import DatabaseIcon from "./DatabaseIcon";
@@ -7,19 +7,6 @@ import ArrowDropdownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import TableIcon from "./TableIcon";
 import FunctionIcon from "./FunctionIcon";
-
-SqlManager.connect({
-  host: "localhost",
-  port: 3306,
-  username: "root",
-  password: "teamtengu1",
-  database: "test"
-});
-
-type DatabaseProps = {
-  db: string;
-  isActive: boolean;
-};
 
 const DatabaseWrapper = styled.div<{ isActive: boolean }>`
   display: flex;
@@ -42,8 +29,14 @@ const DatabaseName = styled.span`
   overflow: hidden;
 `;
 
-const Database: React.FC<DatabaseProps> = ({ db, isActive }) => (
-  <DatabaseWrapper isActive={isActive}>
+type DatabaseProps = {
+  db: string;
+  isActive: boolean;
+  onClick: (event: any) => void;
+};
+
+const Database: React.FC<DatabaseProps> = ({ db, isActive, onClick }) => (
+  <DatabaseWrapper isActive={isActive} onClick={onClick}>
     <DatabaseIcon height={24} width={24}></DatabaseIcon>
     <DatabaseName>{db}</DatabaseName>
   </DatabaseWrapper>
@@ -140,20 +133,36 @@ const DatabaseObjectsSidebar: React.FC<DatabaseObjectsSidebarProps> = ({
 };
 
 export default function App() {
-  const databases = useAsync(SqlManager.getDatabases, []);
-  const objects = useAsync(SqlManager.getObjects, []);
+  const [selectedDatabase, setSelectedDatabase] = useState("test");
+  const [databases, setDatabases] = useState([]);
+  const [objects, setObjects] = useState([]);
+
+  useEffect(() => {
+    SqlManager.connect({
+      host: "localhost",
+      port: 3306,
+      username: "root",
+      password: "teamtengu1",
+      database: selectedDatabase
+    });
+
+    SqlManager.getDatabases().then(x => setDatabases(x as any));
+    SqlManager.getObjects().then(x => setObjects(x as any));
+  }, [selectedDatabase]);
 
   return (
     <AppWrapper>
       <DatabasesSidebar>
-        {databases.result &&
-          databases.result.map(db => (
-            <Database key={db} db={db} isActive={db === "test"}></Database>
-          ))}
+        {databases.map(db => (
+          <Database
+            key={db}
+            db={db}
+            onClick={() => setSelectedDatabase(db)}
+            isActive={db === selectedDatabase}
+          ></Database>
+        ))}
       </DatabasesSidebar>
-      <DatabaseObjectsSidebar
-        objects={objects.result!}
-      ></DatabaseObjectsSidebar>
+      <DatabaseObjectsSidebar objects={objects}></DatabaseObjectsSidebar>
     </AppWrapper>
   );
 }
