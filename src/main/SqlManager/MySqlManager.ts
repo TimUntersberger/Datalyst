@@ -1,26 +1,30 @@
-import * as Mysql from "mysql"
+import * as Mysql from "mysql";
 import ISqlManager, {
   DatabaseObject,
   TableMetaData,
   ConnectionConfig
-} from "./ISqlManager"
+} from "./ISqlManager";
 
 export default class MySqlManager implements ISqlManager {
-  private conn: Mysql.Connection
-  private db: string
+  private conn: Mysql.Connection;
+  private db: string;
 
   constructor(config: ConnectionConfig) {
-    this.conn = Mysql.createConnection(config)
-    this.db = config.database || ""
+    this.conn = Mysql.createConnection(config);
+    this.db = config.database || "";
+  }
+
+  close() {
+    this.conn.end();
   }
 
   getDatabases(): Promise<string[]> {
     return new Promise((resolve, reject) => {
       this.conn.query("show databases", (err, result) => {
-        if (err) reject(err)
-        else resolve(result.map((x: any) => x.Database))
-      })
-    })
+        if (err) reject(err);
+        else resolve(result.map((x: any) => x.Database));
+      });
+    });
   }
   getObjects(): Promise<DatabaseObject[]> {
     return new Promise((resolve, reject) => {
@@ -28,11 +32,11 @@ export default class MySqlManager implements ISqlManager {
         `select table_name as name, 'table' as type from information_schema.tables where table_schema = '${this.db}'
          union select routine_name as name, 'routine' as type from information_schema.routines where routine_schema = '${this.db}'`,
         (err, result) => {
-          if (err) reject(err)
-          else resolve(result)
+          if (err) reject(err);
+          else resolve(result);
         }
-      )
-    })
+      );
+    });
   }
   getMetaDataOfTable(table: string): Promise<TableMetaData> {
     return new Promise((resolve, reject) => {
@@ -69,12 +73,12 @@ export default class MySqlManager implements ISqlManager {
           col.ordinal_position, k.ordinal_position;
         `,
         (err, result) => {
-          if (err) reject(err)
+          if (err) reject(err);
           else {
             const metaData: TableMetaData = {
               columns: [],
               constraints: []
-            }
+            };
 
             result.forEach(x => {
               if (!metaData.columns.some(col => col.name === x.columnName))
@@ -83,26 +87,26 @@ export default class MySqlManager implements ISqlManager {
                   type: x.columnType,
                   isNullable: x.isNullable === "YES",
                   default: x.columnDefault
-                })
+                });
               if (!metaData.constraints.some(c => c.name === x.constraintName))
                 metaData.constraints.push({
                   name: x.constraintName,
                   type: x.constraintType
-                })
-            })
+                });
+            });
 
-            resolve(metaData)
+            resolve(metaData);
           }
         }
-      )
-    })
+      );
+    });
   }
   getDataOfTable(table: string): Promise<any[]> {
     return new Promise((resolve, reject) => {
       this.conn.query(`select * from ${this.db}.${table}`, (err, result) => {
-        if (err) reject(err)
-        else resolve(result)
-      })
-    })
+        if (err) reject(err);
+        else resolve(result);
+      });
+    });
   }
 }

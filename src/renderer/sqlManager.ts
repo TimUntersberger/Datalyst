@@ -1,30 +1,34 @@
-import ISqlManager from "../main/SqlManager/ISqlManager"
+import ISqlManager from "../main/SqlManager/ISqlManager";
 
-const ipc = window.require("electron").ipcRenderer
+const ipc = window.require("electron").ipcRenderer;
+
+const publish = <T>(topic: string): Promise<T> =>
+  new Promise((resolve, reject) => {
+    ipc.once(`${topic}/result`, (event, args) => resolve(args));
+    ipc.send(topic);
+  });
 
 class SqlManager implements ISqlManager {
+  close(): void {}
   connect(config: any) {
-    ipc.sendSync("manager/connect", config)
+    ipc.sendSync("manager/connect", config);
   }
   getDatabases(): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-      ipc.send("manager/getDatabases")
-      ipc.once("manager/getDatabases/result", (event, args) => resolve(args))
-    })
+    return publish("manager/getDatabases");
   }
   getObjects(): Promise<object[]> {
-    throw new Error("Method not implemented.")
+    return publish("manager/getObjects");
   }
   getMetaDataOfTable(
     table: string
   ): Promise<import("../main/SqlManager/ISqlManager").TableMetaData> {
-    throw new Error("Method not implemented.")
+    throw new Error("Method not implemented.");
   }
   getDataOfTable(table: string): Promise<any[]> {
-    throw new Error("Method not implemented.")
+    throw new Error("Method not implemented.");
   }
 }
 
-const manager = new SqlManager()
+const manager = new SqlManager();
 
-export default manager
+export default manager;
