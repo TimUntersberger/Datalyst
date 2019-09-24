@@ -57,7 +57,9 @@ const DatabaseObjectsSidebarWrapper = styled.div`
   border-right: 1px solid lightgrey;
 `;
 
-const DatabaseObjectGroupWrapper = styled.div``;
+const DatabaseObjectGroupWrapper = styled.div`
+  padding: 5px;
+`;
 
 const DatabaseObjectGroupHeader = styled.div`
   display: flex;
@@ -74,6 +76,9 @@ const DatabaseObjectGroupItem = styled.div`
 const DatabaseObjectGroupItemName = styled.span`
   font-size: 0.8em;
   margin-left: 5px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
   align-content: center;
 `;
 
