@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import SqlManager from "../sqlManager";
 import DatabaseIcon from "./DatabaseIcon";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import ArrowDropdownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import TableIcon from "./TableIcon";
@@ -36,12 +36,16 @@ type DatabaseProps = {
 
 const Database: React.FC<DatabaseProps> = ({ db, isActive, onClick }) => {
   const textRef = useRef<HTMLSpanElement>(null);
+  const [title, setTitle] = useState<string | undefined>(undefined);
 
-  const title =
-    textRef.current != null &&
-    textRef.current.offsetWidth < textRef.current.scrollWidth
-      ? db
-      : undefined;
+  useEffect(() => {
+    setTitle(
+      textRef.current != null &&
+        textRef.current.offsetWidth < textRef.current.scrollWidth
+        ? db
+        : undefined
+    );
+  }, [db]);
 
   return (
     <DatabaseWrapper isActive={isActive} onClick={onClick} title={title}>
@@ -59,12 +63,36 @@ const DatabasesSidebar = styled.div`
 
 const AppWrapper = styled.div`
   display: flex;
+  max-height: 100vh;
+  max-width: 100vw;
+  overflow: hidden;
+`;
+
+const ScrollbarCSS = css`
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: #b2b2b2;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: white;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 16px;
+  }
 `;
 
 const DatabaseObjectsSidebarWrapper = styled.div`
   min-width: 250px;
   max-width: 250px;
+  height: 100vh;
+  padding-right: 10px;
+  overflow-y: scroll;
   border-right: 1px solid lightgrey;
+
+  ${ScrollbarCSS}
 `;
 
 const DatabaseObjectGroupWrapper = styled.div`
@@ -84,6 +112,7 @@ const DatabaseObjectGroupItemWrapper = styled.div`
 `;
 
 const DatabaseObjectGroupItemName = styled.a<{ isActive: boolean }>`
+  padding: 0 5px;
   font-size: 0.8em;
   margin-left: 5px;
   text-overflow: ellipsis;
@@ -105,7 +134,7 @@ type DatabaseObjectGroupProps = {
 type DatabaseObjectGroupItemProps = {
   item: string;
   Icon: any;
-  onClick: (item: string) => void;
+  onClick?: (item: string) => void;
   isSelected: (item: string) => boolean;
 };
 const DatabaseObjectGroupItem: React.FC<DatabaseObjectGroupItemProps> = ({
@@ -115,15 +144,19 @@ const DatabaseObjectGroupItem: React.FC<DatabaseObjectGroupItemProps> = ({
   isSelected
 }) => {
   const textRef = useRef<HTMLAnchorElement>(null);
+  const [title, setTitle] = useState<string | undefined>(undefined);
 
-  const title =
-    textRef.current != null &&
-    textRef.current.offsetWidth < textRef.current.scrollWidth
-      ? item
-      : undefined;
+  useEffect(() => {
+    setTitle(
+      textRef.current != null &&
+        textRef.current.offsetWidth < textRef.current.scrollWidth
+        ? item
+        : undefined
+    );
+  }, [item]);
 
   return (
-    <DatabaseObjectGroupItemWrapper key={item}>
+    <DatabaseObjectGroupItemWrapper>
       <Icon width={14} height={14}></Icon>
       <DatabaseObjectGroupItemName
         ref={textRef}
@@ -154,6 +187,7 @@ const DatabaseObjectGroup: React.FC<DatabaseObjectGroupProps> = ({
       </DatabaseObjectGroupHeader>
       {items.map(item => (
         <DatabaseObjectGroupItem
+          key={item}
           Icon={Icon}
           item={item}
           isSelected={isSelected}
