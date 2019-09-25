@@ -1,6 +1,14 @@
 # Datalyst
 cross platform dbms
 
+## Development
+
+* `npm install`
+* `npm run watch` in one terminal tab and `npm run main:start` in another tab.
+
+If you want to develop only the database driver then only use `npm run lib:dev`.
+You can write "tests" in the lib.ts file.
+
 ## Scripts
 
 ### watch
