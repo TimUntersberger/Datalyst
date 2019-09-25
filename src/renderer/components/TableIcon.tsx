@@ -1,9 +1,9 @@
-import React from "react";
+import React from "react"
 
 export type TableIconProps = {
-  height: number;
-  width: number;
-};
+  height: number
+  width: number
+}
 function TableIcon(props: TableIconProps) {
   return (
     <svg
@@ -13,10 +13,10 @@ function TableIcon(props: TableIconProps) {
       y="0px"
       width={(props.width || 64) + "px"}
       height={(props.height || 64) + "px"}
-      viewBox="0 0 475.082 475.081"
-    >
+      viewBox="0 0 475.082 475.081">
       <g>
         <path
+          style={{ fill: "orange" }}
           d="M461.667,49.963c-8.949-8.947-19.698-13.418-32.265-13.418H45.682c-12.562,0-23.317,4.471-32.264,13.418
 		C4.473,58.912,0,69.663,0,82.228V392.86c0,12.566,4.473,23.309,13.418,32.261c8.947,8.949,19.701,13.415,32.264,13.415h383.72
 		c12.566,0,23.315-4.466,32.265-13.415c8.945-8.952,13.415-19.701,13.415-32.261V82.228
@@ -65,7 +65,7 @@ function TableIcon(props: TableIconProps) {
       <g></g>
       <g></g>
     </svg>
-  );
+  )
 }
 
-export default TableIcon;
+export default TableIcon
