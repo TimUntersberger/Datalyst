@@ -52,13 +52,13 @@ ipc.on("manager/connect", (event, args) => {
   event.returnValue = true
 })
 
-ipc.on("manager/getDatabases", (event, args) => {
+ipc.on("manager/getDatabases", (event, _args) => {
   manager.getDatabases().then(result => {
     event.reply("manager/getDatabases/result", result)
   })
 })
 
-ipc.on("manager/getObjects", (event, args) => {
+ipc.on("manager/getObjects", (event, _args) => {
   manager.getObjects().then(result => {
     event.reply("manager/getObjects/result", result)
   })
